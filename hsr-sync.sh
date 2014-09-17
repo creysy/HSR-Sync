@@ -2,7 +2,9 @@
 # Sync HSR Script Folders
 
 # Config
-DESTFOLDER="/cygdrive/c/Users/User/work/DestFolder"
+SERVER="/mnt/hsr/"
+#SERVER="//c206.hsr.ch/skripte/"
+DESTFOLDER="/home/flo/hsr/sem_3"
 
 MODULES[0]="Informatik/Fachbereich/Programmieren_3_C++11"
 MODULES[1]="Informatik/Fachbereich/User_Interfaces_1"
@@ -15,7 +17,6 @@ MODULES[7]="Informatik/Fachbereich/Challenge_Projekte_1"
 
 
 # Const
-SERVER="//c206.hsr.ch/skripte/"
 TEMPEXT=".IAMOLD"
 TS="date +%T"
 SEP1="==============================================================================="
@@ -30,13 +31,15 @@ for MODULE in ${MODULES[*]} ; do
 	echo $SEP2
 	echo `$TS` "$MODULE:"
 	TMPSTOPWATCH=`date +%s`
-	rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --chmod=ugo=rwx $SERVER$MODULE/ .
+	rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude "*.DS_Store" --exclude "*Thumbs.db" --chmod=ugo=rwx $SERVER$MODULE/ .
 	echo "took" $(((`date +%s`-TMPSTOPWATCH)/60)) "min." $(((`date +%s`-TMPSTOPWATCH)%60)) "sec."
 done
 
 echo $SEP1
 echo `$TS` "Fix Permissions.."
 chmod -R 777 .
+
+exit 0
 
 echo $SEP1
 echo `$TS` "Check for New File Versions.."
@@ -53,4 +56,5 @@ done
 echo $SEP1
 echo `$TS` "DONE!" "took" $(((`date +%s`-STOPWATCH)/60)) "min." $(((`date +%s`-STOPWATCH)%60)) "sec."
 
-read 
+read
+
