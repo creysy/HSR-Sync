@@ -39,22 +39,17 @@ echo $SEP1
 echo `$TS` "Fix Permissions.."
 chmod -R 777 .
 
-exit 0
-
 echo $SEP1
 echo `$TS` "Check for New File Versions.."
-for FILE in `find . -type f -iname *$TEMPEXT` ; do
-	FILENAME=${FILE%.*}
-	TS=${FILE##*.}
-	BASEFILENAME=${FILENAME%.*}
-	BASEFILENAMENOEXT=${BASEFILENAME##*.}
-	EXTENSION=${BASEFILENAME##*.}
+for FILE in `find . -type f -iname "*$TEMPEXT"` ; do
+	OLDFILE=${FILE:0:-7}
+	BASEFILE=${FILE:0:-24}
+	BASENAME=${BASEFILE##*/}
+	EXTENSION=${BASENAME##*.}
+
+	echo `$TS` "New Version of: $BASEFILE"
+	mv "$FILE" "$OLDFILE.$EXTENSION"
 	echo $SEP2
-	echo `$DATE` "New Version of: $BASEFILENAME"
-	mv "$FILE" "$BASEFILENAMENOEXT.$TS.$EXTENSION"
 done
 echo $SEP1
 echo `$TS` "DONE!" "took" $(((`date +%s`-STOPWATCH)/60)) "min." $(((`date +%s`-STOPWATCH)%60)) "sec."
-
-read
-
