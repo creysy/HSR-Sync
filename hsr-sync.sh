@@ -56,8 +56,6 @@ find . -type f -name "*$TEMPEXT" -print0 | while read -d $'\0' FILE ; do
 
 	echo `$TS` "New Version of: $BASEFILE"
 	mv "$FILE" "$OLDFILE.$EXTENSION"
-
-
 	echo FILE=$FILE
 	echo OLDFILE=$OLDFILE
 	echo BASEFILE=$BASEFILE
