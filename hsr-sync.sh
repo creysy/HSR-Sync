@@ -61,7 +61,6 @@ find . -type f -name "*$TEMPEXT" -print0 | while read -d $'\0' FILE ; do
 	echo BASEFILE=$BASEFILE
 	echo BASENAME=$BASENAME
 	echo EXTENSION=$EXTENSION
-	echo $SEP2
 done
 echo $SEP1
 
