@@ -41,7 +41,7 @@ chmod -R 777 .
 
 echo $SEP1
 echo `$TS` "Check for New File Versions.."
-for FILE in `find . -type f -iname "*$TEMPEXT"` ; do
+find . -type f -iname "*$TEMPEXT" -print0 | while read -d $'\0' FILE ; do
 	OLDFILE=${FILE:0:-7}
 	BASEFILE=${FILE:0:-24}
 	BASENAME=${BASEFILE##*/}
@@ -49,7 +49,6 @@ for FILE in `find . -type f -iname "*$TEMPEXT"` ; do
 
 	echo `$TS` "New Version of: $BASEFILE"
 	mv "$FILE" "$OLDFILE.$EXTENSION"
-	echo $SEP2
 done
 echo $SEP1
 echo `$TS` "DONE!" "took" $(((`date +%s`-STOPWATCH)/60)) "min." $(((`date +%s`-STOPWATCH)%60)) "sec."
