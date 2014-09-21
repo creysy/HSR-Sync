@@ -1,11 +1,12 @@
 #!/bin/bash
 # Sync HSR Script Folders
 
-# Config
+## Config
 SERVER="/mnt/hsr/"
 #SERVER="//c206.hsr.ch/skripte/"
 DESTFOLDER="/home/flo/hsr/sem_3"
 
+# Modules
 MODULES[0]="Informatik/Fachbereich/Programmieren_3_C++11"
 MODULES[1]="Informatik/Fachbereich/User_Interfaces_1"
 MODULES[2]="Informatik/Fachbereich/Software-Engineering_1"
@@ -15,14 +16,21 @@ MODULES[5]="Kommunikation_Wirtschaft_Recht/Business_und_Recht_1"
 MODULES[6]="Mathematik_Naturwissenschaften/Physik_1"
 MODULES[7]="Informatik/Fachbereich/Challenge_Projekte_1"
 
+# Advanced
+COLORKEYWORDS="backed up\|deleted"
+EXCLUDEDFILES="*.DS_Store,*Thumbs.db"
 
-# Const
+
+## Const
 TEMPEXT=".IAMOLD"
 TS="date +%T"
 SEP1="==============================================================================="
 SEP2="-------------------------------------------------------------------------------"
 STOPWATCH=`date +%s`
+LOGMSGTYP="BACKUP,COPY,DEL,MISC,MOUNT,NAME1,PROGRESS2,REMOVE,SKIP,STATS,SYMSAFE"
 
+
+###
 cd $DESTFOLDER
 
 echo $SEP1
@@ -31,7 +39,7 @@ for MODULE in ${MODULES[*]} ; do
 	echo $SEP2
 	echo `$TS` "$MODULE:"
 	TMPSTOPWATCH=`date +%s`
-	rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude "*.DS_Store" --exclude "*Thumbs.db" --chmod=ugo=rwx $SERVER$MODULE/ .
+	rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude={$EXCLUDEDFILES} --info=$LOGMSGTYP $SERVER$MODULE/ . | sed -e "s/^$COLORKEYWORDS/\x1b[91m&\x1b[0m/"
 	echo "took" $(((`date +%s`-TMPSTOPWATCH)/60)) "min." $(((`date +%s`-TMPSTOPWATCH)%60)) "sec."
 done
 
