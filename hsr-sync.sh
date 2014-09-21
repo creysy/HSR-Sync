@@ -5,15 +5,7 @@
 ISLINUX=true
 DESTFOLDER="/home/flo/hsr/sem-3"
 
-# Modules
-MODULES[0]="Informatik/Fachbereich/Programmieren_3_C++11"
-MODULES[1]="Informatik/Fachbereich/User_Interfaces_1"
-MODULES[2]="Informatik/Fachbereich/Software-Engineering_1"
-MODULES[3]="Informatik/Fachbereich/Datenbanksysteme_1"
-MODULES[4]="Informatik/Fachbereich/Internettechnologien"
-MODULES[5]="Kommunikation_Wirtschaft_Recht/Business_und_Recht_1"
-MODULES[6]="Mathematik_Naturwissenschaften/Physik_1"
-MODULES[7]="Informatik/Fachbereich/Challenge_Projekte_1"
+MODULES[0]="a"
 
 
 ## Const
@@ -64,6 +56,15 @@ find . -type f -name "*$TEMPEXT" -print0 | while read -d $'\0' FILE ; do
 
 	echo `$TS` "New Version of: $BASEFILE"
 	mv "$FILE" "$OLDFILE.$EXTENSION"
+
+	echo $FILE
+	echo $FILENAME
+	echo $TS
+	echo $BASEFILENAME
+	echo $BASEFILENAMENOEXT
+	echo $EXTENSION
+
+	echo $SEP2
 done
 echo $SEP1
 
