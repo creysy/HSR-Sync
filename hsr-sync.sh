@@ -3,8 +3,6 @@
 
 ## Config
 ISLINUX=true
-SERVER="/mnt/hsr"
-#SERVER="//c206.hsr.ch/skripte"
 DESTFOLDER="/home/flo/hsr/sem_3"
 
 # Modules
@@ -30,6 +28,12 @@ SEP2="--------------------------------------------------------------------------
 STOPWATCH=`date +%s`
 LOGMSGTYP="BACKUP,COPY,DEL,MISC,MOUNT,NAME1,PROGRESS2,REMOVE,STATS,SYMSAFE"
 
+if $ISLINUX ; then
+	SERVER="/mnt/hsr"
+else
+	SERVER="//c206.hsr.ch/skripte"
+fi
+
 
 ###
 cd $DESTFOLDER
@@ -47,7 +51,7 @@ for MODULE in ${MODULES[*]} ; do
 	if $ISLINUX ; then
 		rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude={$EXCLUDEDFILES} --info=$LOGMSGTYP $SERVER/$MODULE/ . | sed -e "s/^$COLORKEYWORDS/\x1b[91m&\x1b[0m/"
 	else
-		rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude={$EXCLUDEDFILES} $SERVER$MODULE/ .
+		rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude={$EXCLUDEDFILES} $SERVER/$MODULE/ .
 	fi
 	echo "took" $(((`date +%s`-TMPSTOPWATCH)/60)) "min." $(((`date +%s`-TMPSTOPWATCH)%60)) "sec."
 done
