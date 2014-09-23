@@ -3,7 +3,9 @@
 
 ## Config
 ISLINUX=true
-DESTFOLDER="/home/flo/hsr/sem-3"
+SERVER="/tmp/server"
+#SERVER="//c206.hsr.ch/skripte"
+DESTFOLDER="/tmp/client"
 
 MODULES[0]="a"
 
