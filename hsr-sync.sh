@@ -2,6 +2,7 @@
 # Sync HSR Script Folders
 
 ## Config
+ISLINUX=true
 SERVER="/mnt/hsr/"
 #SERVER="//c206.hsr.ch/skripte/"
 DESTFOLDER="/home/flo/hsr/sem_3"
@@ -27,7 +28,7 @@ TS="date +%T"
 SEP1="==============================================================================="
 SEP2="-------------------------------------------------------------------------------"
 STOPWATCH=`date +%s`
-LOGMSGTYP="BACKUP,COPY,DEL,MISC,MOUNT,NAME1,PROGRESS2,REMOVE,SKIP,STATS,SYMSAFE"
+LOGMSGTYP="BACKUP,COPY,DEL,MISC,MOUNT,NAME1,PROGRESS2,REMOVE,STATS,SYMSAFE"
 
 
 ###
@@ -39,7 +40,11 @@ for MODULE in ${MODULES[*]} ; do
 	echo $SEP2
 	echo `$TS` "$MODULE:"
 	TMPSTOPWATCH=`date +%s`
-	rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude={$EXCLUDEDFILES} --info=$LOGMSGTYP $SERVER$MODULE/ . | sed -e "s/^$COLORKEYWORDS/\x1b[91m&\x1b[0m/"
+	if $ISLINUX ; then
+		rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude={$EXCLUDEDFILES} --info=$LOGMSGTYP $SERVER$MODULE/ . | sed -e "s/^$COLORKEYWORDS/\x1b[91m&\x1b[0m/"
+	else
+		rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude={$EXCLUDEDFILES} $SERVER$MODULE/ .
+	fi
 	echo "took" $(((`date +%s`-TMPSTOPWATCH)/60)) "min." $(((`date +%s`-TMPSTOPWATCH)%60)) "sec."
 done
 
