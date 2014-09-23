@@ -3,8 +3,6 @@
 
 ## Config
 ISLINUX=true
-SERVER="/tmp/server"
-#SERVER="//c206.hsr.ch/skripte"
 DESTFOLDER="/tmp/client"
 
 MODULES[0]="a"
@@ -19,7 +17,7 @@ LOGMSGTYP="BACKUP,COPY,DEL,MISC,MOUNT,NAME1,PROGRESS2,REMOVE,STATS,SYMSAFE"
 COLORKEYWORDS="backed up\|deleting"
 
 if $ISLINUX ; then
-	SERVER="/mnt/hsr"
+	SERVER="/tmp/server"
 else
 	SERVER="//c206.hsr.ch/skripte"
 fi
