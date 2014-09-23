@@ -3,8 +3,8 @@
 
 ## Config
 ISLINUX=true
-SERVER="/mnt/hsr/"
-#SERVER="//c206.hsr.ch/skripte/"
+SERVER="/mnt/hsr"
+#SERVER="//c206.hsr.ch/skripte"
 DESTFOLDER="/home/flo/hsr/sem_3"
 
 # Modules
@@ -34,6 +34,10 @@ LOGMSGTYP="BACKUP,COPY,DEL,MISC,MOUNT,NAME1,PROGRESS2,REMOVE,STATS,SYMSAFE"
 ###
 cd $DESTFOLDER
 
+if $ISLINUX ; then
+	sudo mount $SERVER
+fi
+
 echo $SEP1
 echo `$TS` "Sync HSR Script Folders.."
 for MODULE in ${MODULES[*]} ; do
@@ -41,7 +45,7 @@ for MODULE in ${MODULES[*]} ; do
 	echo `$TS` "$MODULE:"
 	TMPSTOPWATCH=`date +%s`
 	if $ISLINUX ; then
-		rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude={$EXCLUDEDFILES} --info=$LOGMSGTYP $SERVER$MODULE/ . | sed -e "s/^$COLORKEYWORDS/\x1b[91m&\x1b[0m/"
+		rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude={$EXCLUDEDFILES} --info=$LOGMSGTYP $SERVER/$MODULE/ . | sed -e "s/^$COLORKEYWORDS/\x1b[91m&\x1b[0m/"
 	else
 		rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude={$EXCLUDEDFILES} $SERVER$MODULE/ .
 	fi
