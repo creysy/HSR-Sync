@@ -15,10 +15,6 @@ MODULES[5]="Kommunikation_Wirtschaft_Recht/Business_und_Recht_1"
 MODULES[6]="Mathematik_Naturwissenschaften/Physik_1"
 MODULES[7]="Informatik/Fachbereich/Challenge_Projekte_1"
 
-# Advanced
-COLORKEYWORDS="backed up\|deleted"
-EXCLUDEDFILES="*.DS_Store,*Thumbs.db"
-
 
 ## Const
 TEMPEXT=".IAMOLD"
@@ -27,6 +23,7 @@ SEP1="==========================================================================
 SEP2="-------------------------------------------------------------------------------"
 STOPWATCH=`date +%s`
 LOGMSGTYP="BACKUP,COPY,DEL,MISC,MOUNT,NAME1,PROGRESS2,REMOVE,STATS,SYMSAFE"
+COLORKEYWORDS="backed up\|deleted"
 
 if $ISLINUX ; then
 	SERVER="/mnt/hsr"
@@ -49,9 +46,9 @@ for MODULE in ${MODULES[*]} ; do
 	echo `$TS` "$MODULE:"
 	TMPSTOPWATCH=`date +%s`
 	if $ISLINUX ; then
-		rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude={$EXCLUDEDFILES} --info=$LOGMSGTYP $SERVER/$MODULE/ . | sed -e "s/^$COLORKEYWORDS/\x1b[91m&\x1b[0m/"
+		rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude '*.DS_Store' --exclude '*.DS_STORE' --exclude '*Thumbs.db' --info=$LOGMSGTYP $SERVER/$MODULE/ . | sed -e "s/^$COLORKEYWORDS/\x1b[91m&\x1b[0m/"
 	else
-		rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude={$EXCLUDEDFILES} $SERVER/$MODULE/ .
+		rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude '*.DS_Store' --exclude '*.DS_STORE' --exclude '*Thumbs.db' $SERVER/$MODULE/ .
 	fi
 	echo "took" $(((`date +%s`-TMPSTOPWATCH)/60)) "min." $(((`date +%s`-TMPSTOPWATCH)%60)) "sec."
 done
