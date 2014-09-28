@@ -3,7 +3,7 @@
 
 ## Config
 ISLINUX=true
-DESTFOLDER="/home/flo/hsr/sem_3"
+DESTFOLDER="/home/flo/hsr/sem-3"
 
 # Modules
 MODULES[0]="Informatik/Fachbereich/Programmieren_3_C++11"
