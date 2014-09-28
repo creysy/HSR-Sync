@@ -23,7 +23,7 @@ SEP1="==========================================================================
 SEP2="-------------------------------------------------------------------------------"
 STOPWATCH=`date +%s`
 LOGMSGTYP="BACKUP,COPY,DEL,MISC,MOUNT,NAME1,PROGRESS2,REMOVE,STATS,SYMSAFE"
-COLORKEYWORDS="backed up\|deleted"
+COLORKEYWORDS="backed up\|deleting"
 
 if $ISLINUX ; then
 	SERVER="/mnt/hsr"
@@ -54,12 +54,8 @@ for MODULE in ${MODULES[*]} ; do
 done
 
 echo $SEP1
-echo `$TS` "Fix Permissions.."
-chmod -R 777 .
-
-echo $SEP1
 echo `$TS` "Check for New File Versions.."
-find . -type f -iname "*$TEMPEXT" -print0 | while read -d $'\0' FILE ; do
+find . -type f -name "*$TEMPEXT" -print0 | while read -d $'\0' FILE ; do
 	OLDFILE=${FILE:0:-7}
 	BASEFILE=${FILE:0:-24}
 	BASENAME=${BASEFILE##*/}
@@ -69,4 +65,5 @@ find . -type f -iname "*$TEMPEXT" -print0 | while read -d $'\0' FILE ; do
 	mv "$FILE" "$OLDFILE.$EXTENSION"
 done
 echo $SEP1
+
 echo `$TS` "DONE!" "took" $(((`date +%s`-STOPWATCH)/60)) "min." $(((`date +%s`-STOPWATCH)%60)) "sec."
