@@ -21,7 +21,6 @@ TEMPEXT=".IAMOLD"
 TS="date +%T"
 SEP1="==============================================================================="
 SEP2="-------------------------------------------------------------------------------"
-STOPWATCH=`date +%s`
 LOGMSGTYP="BACKUP,COPY,DEL,MISC,MOUNT,NAME1,PROGRESS2,REMOVE,STATS,SYMSAFE"
 COLORKEYWORDS="backed up\|deleting"
 
@@ -38,6 +37,8 @@ cd $DESTFOLDER
 if $ISLINUX ; then
 	sudo mount $SERVER
 fi
+
+STOPWATCH=`date +%s`
 
 echo $SEP1
 echo `$TS` "Sync HSR Script Folders.."
@@ -56,8 +57,8 @@ done
 echo $SEP1
 echo `$TS` "Check for New File Versions.."
 find . -type f -name "*$TEMPEXT" -print0 | while read -d $'\0' FILE ; do
-	OLDFILE=${FILE:0:-7}
-	BASEFILE=${FILE:0:-24}
+	OLDFILE=${FILE%.*}
+	BASEFILE=${OLDFILE%.*}
 	BASENAME=${BASEFILE##*/}
 	EXTENSION=${BASENAME##*.}
 
