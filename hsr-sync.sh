@@ -3,6 +3,10 @@
 
 ## Config
 ISLINUX=true
+ISMAC=false
+#if you have a mac replace username in SERVER_URL
+SERVER_URL="//username@hsr.ch/root/alg/skripte"
+#change the path to wherever you want to sync your files
 DESTFOLDER="/home/flo/hsr/sem-3"
 
 # Modules
@@ -24,21 +28,44 @@ SEP2="--------------------------------------------------------------------------
 LOGMSGTYP="BACKUP,COPY,DEL,MISC,MOUNT,NAME1,PROGRESS2,REMOVE,STATS,SYMSAFE"
 COLORKEYWORDS="backed up\|deleting"
 
+STOPWATCH=`date +%s`
+TMPSTOPWATCH=`date +%s`
+
+echo $SEP1
+echo "Mounting skript folder..."
+echo $SEP2
+
 if $ISLINUX ; then
 	SERVER="/mnt/hsr"
+fi
+if $ISMAC ; then
+	SERVER="/Volumes/skripte"
 else
 	SERVER="//c206.hsr.ch/skripte"
 fi
-
 
 ###
 cd $DESTFOLDER
 
 if $ISLINUX ; then
-	sudo mount $SERVER
+	cmd_output=$(mount $SERVER 2>&1)
+fi
+if $ISMAC ; then
+	mkdir $SERVER
+	cmd_output=$(mount -t smbfs $SERVER_URL $SERVER 2>&1)
 fi
 
-STOPWATCH=`date +%s`
+#removes created folder for the mounting and ends script
+if [[ $cmd_output != "" ]] ; then 
+	if $ISMAC ; then
+		rm -rf $SERVER
+	fi
+	echo $cmd_output
+	echo `$TS` "HSR-Sync DONE!" "took" $(((`date +%s`-STOPWATCH)/60)) "min." $(((`date +%s`-STOPWATCH)%60)) "sec."
+	exit 1
+fi
+
+echo "Connected! took" $(((`date +%s`-TMPSTOPWATCH)/60)) "min." $(((`date +%s`-TMPSTOPWATCH)%60)) "sec."
 
 echo $SEP1
 echo `$TS` "Sync HSR Script Folders.."
@@ -65,6 +92,16 @@ find . -type f -name "*$TEMPEXT" -print0 | while read -d $'\0' FILE ; do
 	echo `$TS` "New Version of: $BASEFILE"
 	mv "$FILE" "$OLDFILE.$EXTENSION"
 done
+
+echo $SEP1
+
+echo "Unmount skripte folder"
+umount $SERVER
+
+if $ISMAC ; then	
+	rm -rf $SERVER
+fi
+
 echo $SEP1
 
 echo `$TS` "DONE!" "took" $(((`date +%s`-STOPWATCH)/60)) "min." $(((`date +%s`-STOPWATCH)%60)) "sec."
