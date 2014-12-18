@@ -2,10 +2,12 @@
 # Sync HSR Script Folders
 
 ## Config
-ISLINUX=true
+ISLINUX=false
 ISMAC=false
+ISWiNDOWS=true
+USERNAME=kschmidi
 #if you have a mac replace username in SERVER_URL
-SERVER_URL="//username@hsr.ch/root/alg/skripte"
+SERVER_URL="//$USERNAME@hsr.ch/root/alg/skripte"
 #change the path to wherever you want to sync your files
 DESTFOLDER="/home/flo/hsr/sem-3"
 
@@ -54,6 +56,10 @@ if $ISMAC ; then
 	mkdir $SERVER
 	cmd_output=$(mount -t smbfs $SERVER_URL $SERVER 2>&1)
 fi
+if $ISWINDOWS ; then
+	cmd_output=$(mount.cifs //$SERVER -o username=$USERNAME 2>&1)
+	sudo smbmount //$SERVER ~/shares/hsr -o user=$USERNAME,iocharset=utf8,noperm
+fi
 
 #removes created folder for the mounting and ends script
 if [[ $cmd_output != "" ]] ; then 
@@ -75,8 +81,12 @@ for MODULE in ${MODULES[*]} ; do
 	TMPSTOPWATCH=`date +%s`
 	if $ISLINUX ; then
 		rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude '*.DS_Store' --exclude '*.DS_STORE' --exclude '*Thumbs.db' --info=$LOGMSGTYP $SERVER/$MODULE/ . | sed -e "s/^$COLORKEYWORDS/\x1b[91m&\x1b[0m/"
-	else
+	fi
+	if $ISMAC ; then
 		rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --exclude '*.DS_Store' --exclude '*.DS_STORE' --exclude '*Thumbs.db' $SERVER/$MODULE/ .
+	fi
+	if $ISWINDOWS ; then
+		rsync -rtzuv --backup --suffix=.`date +"%Y-%m-%d_%H-%M"`$TEMPEXT --chmod=ugo=rwx $SERVER$MODULE/ .
 	fi
 	echo "took" $(((`date +%s`-TMPSTOPWATCH)/60)) "min." $(((`date +%s`-TMPSTOPWATCH)%60)) "sec."
 done
