@@ -1,6 +1,9 @@
 @echo off
 
-C:
-chdir C:\cygwin64\bin
+color 0a
 
-bash --login -i hsr-sync.sh
+REM change cygwin to cygwin64 if you have an 64bit machine
+chdir C:\cygwin\bin
+
+REM change \wherever\your\file\is\downloaded to wherever your script is
+bash --login -i C:\wherever\your\file\is\downloaded
